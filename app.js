@@ -9,14 +9,18 @@ class Task extends Component {
         </div>
         <div>
             <button class="btn btn-primary border-0 me-2 " type="button" id="button-addon2"><i class="bi bi-pencil"></i></button>
-            <button class="btn btn-danger border-0 " type="button" id="button-addon2"><i class="bi bi-trash"></i></button>                       
+            <button class="btn btn-danger border-0 " type="button" id="button-addon2" t-on-click="deleteTask"><i class="bi bi-trash"></i></button>                       
         </div>
     </li>
     `
-    static props = ["task"];
+    static props = ["task","onDelete"];
 
     toggleTask(){
         this.props.task.isComplated = !this.props.task.isComplated;
+    }
+
+    deleteTask(){
+        this.props.onDelete(this.props.task)
     }
 }
 class Root extends Component {
@@ -34,7 +38,7 @@ class Root extends Component {
     </div>
     <ul class="d-flex flex-column alin-item-center mt-5 p-0">
         <t t-foreach="tasks" t-as="task" t-key="task.id">
-            <Task task="task"/>
+            <Task task="task" onDelete.bind="deleteTask"/>
         </t>
     </ul> 
 
@@ -65,5 +69,11 @@ class Root extends Component {
         console.log(this.tasks)
 
     } 
+
+    deleteTask(task){
+        const index = this.tasks.findIndex(t=>t.id == task.id)
+        this.tasks.splice(index,1)
+
+    }
 }
 mount(Root,document.getElementById("root"));
